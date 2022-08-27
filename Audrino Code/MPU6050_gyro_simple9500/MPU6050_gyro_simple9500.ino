@@ -65,6 +65,6 @@ void loop()
 
   // Wait to full timeStep period
 //  delay((timeStep*1000) - (millis() - timer));
-  delay(500);
+  delay(50);
 
 }
