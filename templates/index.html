@@ -43,52 +43,43 @@
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
 						<section>
-							<a href="#" class="image"><img src="images/pic01.jpg" alt="" data-position="center center" /></a>
+							<a href="#" class="image"><img src="{{ url_for('static', filename='images/pic01.jpg')}}" alt="" data-position="center center" /></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Controller Page</h2>
 									<p>This page is for using the game controller to control the robot.</p>
 									<ul class="actions">
-										<li><a href="generic.html" class="button">Start Controller</a></li>
+										<li><a href="{{ url_for('ctrl')}}" class="button">Start Controller</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
+							<a href="#" class="image"><img src="{{ url_for('static', filename='images/pic02.jpg')}}" alt="" data-position="top center" /></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Sequence Page</h2>
 									<p>This page is for programming the robot in a sequence of max 10 Steps.</p>
 									<ul class="actions">
-										<li><a href="generic.html" class="button">Start Sequence Programming</a></li>
+										<li><a href="{{ url_for('seq')}}" class="button">Start Sequence Programming</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
+							<a href="#" class="image"><img src="{{ url_for('static', filename='images/pic03.jpg')}}" alt="" data-position="25% 25%" /></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Admin Page</h2>
 									<p>This page is for the respective game admin to view robot measurements and operate the robot remotely. </p>
 									<ul class="actions">
-										<li><a href="generic.html" class="button">Begin as Admin</a></li>
+										<li><a href="{{ url_for('admin')}}" class="button">Begin as Admin</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
 					</section>
 			</div>
-
-		<!-- Footer -->
-			<footer id="footer" class="wrapper style1-alt">
-				<div class="inner">
-					<ul class="menu">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-				</div>
-			</footer>
 
 		<!-- Scripts -->
       <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Hyperspace by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" />
+		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css')}}"/></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME</a>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Elements</h1>					
+
+							<!-- Data -->
+								<section class="align-center">
+									<div class="box alt align-center">
+										<div class="row gtr-uniform align-center">
+											<div class="col-5"><span class="fit"> 
+                                                <section>
+                                                    <h2>CornHoleBot #1</h2>
+                                                    <h3 id="status">Status: Disconnected </h3>
+                                                    <div class="table-wrapper">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Pot Voltage</td>
+                                                                    <td id="potVoltage">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>X-Tilt</td>
+                                                                    <td id="xTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Y-Tilt</td>
+                                                                    <td id="yTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Z-Tilt</td>
+                                                                    <td id="zTilt">---</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+									                </div>
+                                                 </section>
+                                             </span>
+                                            </div>
+											<div class="col-5"><span class="fit"> 
+                                             </span>
+                                            </div>
+										</div>
+									</div>
+                                </section>
+                        </div>
+                    </section>
+
+			</div>
+
+		<!-- Scripts -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/util.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.min.js"></script>
+        <script>
+        // Init socketio client
+        socket = io();
+        // Connect to where its Serving
+        socket.connect('http://127.0.0.1:5000');
+
+        // A sort of hand shake to tell the server to send Data 
+        socket.on('connect',function(){
+        socket.send('admin');
+        document.getElementById("status").innerHTML =  "Status: Connected"
+        })
+        
+        socket.on('disconnect',function(){
+        document.getElementById("status").innerHTML =  "Status: Disconnect"
+        })
+
+        // Receiving data and asking for data back 
+        socket.on('message',function(msg){
+        // Receiving and displaying
+        console.log(msg);
+        document.getElementById("potVoltage").innerHTML =  msg[0]
+        document.getElementById("xTilt").innerHTML =  msg[1]
+        document.getElementById("yTilt").innerHTML =  msg[2]
+        document.getElementById("zTilt").innerHTML =  msg[3]
+        // Send out to Receive more
+        socket.send('admin');
+        })
+        </script>
+
+	</body>
+</html>

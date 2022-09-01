@@ -1,1 +1,1 @@
-M1V,M2V,M3V,M4V,Ort,Spsi,Sagl,BotV,PiV,AdrV,PRL,ARL,PRF,ARF
+M1pwm,M2pwm,M3pwm,M4pwm,ArmSignnal,xTilt,yTilt,zTilt,         Spsi,Sagl,BotV,PRL,ARL,PRF,ARF

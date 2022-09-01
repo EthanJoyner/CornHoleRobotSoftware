@@ -32,6 +32,26 @@ def returnSerial():
 def main():
     return render_template("index.html")
 
+@app.route("/ctrl")
+def ctrl():
+    return render_template("ctrl.html")
+
+@app.route("/seq")
+def seq():
+    return render_template("seq.html")
+
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
+
+@app.route("/documentation")
+def documentation():
+    return render_template("documentation.html")
+
+@app.route("/elements")
+def elements():
+    return render_template("elements.html")
+
 # Socketio Sending Message
 @socket.on('message')
 def handleMsg(msg):
