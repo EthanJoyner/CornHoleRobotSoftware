@@ -30,7 +30,7 @@ void loop() {
      message[message_pos] = '\0';
 
      //Print the message (or do other things)
-     Serial.println(message);
+     Serial.println(int(message));
 
      //Reset for the next message
      message_pos = 0;

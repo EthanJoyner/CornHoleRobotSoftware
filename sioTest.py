@@ -11,7 +11,7 @@ socket = SocketIO(app)
 # Serial Setup
 ser = serial.Serial('COM3', baudrate = 9600, timeout=1)
 
-# Serial returning
+# # Serial returning
 def returnSerial():
    finalResult = []
    arduinoData = ser.readline().decode('Ascii')
@@ -44,9 +44,9 @@ def seq():
 def admin():
     return render_template("admin.html")
 
-@app.route("/documentation")
-def documentation():
-    return render_template("documentation.html")
+@app.route("/docs")
+def docs():
+    return render_template("doc.html")
 
 @app.route("/elements")
 def elements():
@@ -59,4 +59,4 @@ def handleMsg(msg):
 
 # Start Flask Server w/ Socketio
 if __name__ == "__main__":
-    socket.run(app)
+    socket.run(app, host= '0.0.0.0', port=5000)

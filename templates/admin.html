@@ -88,13 +88,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.min.js"></script>
         <script>
         // Init socketio client
-        socket = io();
+        adminSocket = io();
         // Connect to where its Serving
         socket.connect('http://127.0.0.1:5000');
 
         // A sort of hand shake to tell the server to send Data 
-        socket.on('connect',function(){
-        socket.send('admin');
+        adminSocket.on('connect',function(){
+        adminSocket.send('admin');
         document.getElementById("status").innerHTML =  "Status: Connected"
         })
         
@@ -111,7 +111,7 @@
         document.getElementById("yTilt").innerHTML =  msg[2]
         document.getElementById("zTilt").innerHTML =  msg[3]
         // Send out to Receive more
-        socket.send('admin');
+        adminSocket.send('admin');
         })
         </script>
 

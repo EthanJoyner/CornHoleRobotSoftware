@@ -6,6 +6,14 @@
 -->
 <html>
 	<head>
+		<style>
+			.rectangle {
+			  height: 50px;
+			  width: 100px;
+			  background-color: #555;
+			  transform: rotate(90deg);
+			}
+		</style>
 		<title>Hyperspace by HTML5 UP</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -15,13 +23,121 @@
 	<body class="is-preload">
 
 		<!-- Header -->
-        <header id="header">
-            <a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME</a>
-        </header>
+			<header id="header">
+				<a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME</a>
+			</header>
 
-        Code goes Here ctrl
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major">Controller Page</h1>					
+
+							<!-- Data -->
+								<section class="align-center">
+									<div class="box alt align-center">
+										<div class="row gtr-uniform align-center">
+											<div class="col-5"><span class="fit"> 
+                                                <section>
+                                                    <h2>CornHoleBot #1</h2>
+                                                    <h3 id="iostatus">WSIO Status: Disconnected </h3>
+                                                    <div class="table-wrapper">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Robot Voltage</td>
+                                                                    <td id="potVoltage">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>X-Tilt</td>
+                                                                    <td id="xTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Y-Tilt</td>
+                                                                    <td id="yTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Z-Tilt</td>
+                                                                    <td id="zTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Tank PSI</td>
+                                                                    <td id="zTilt">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Compressor Temperature</td>
+                                                                    <td id="zTilt">---</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+									                </div>
+                                                 </section>
+                                             </span>
+                                            </div>
+											<div class="col-5"><span class="fit align-center"> 
+
+                                                <section>
+                                                    <h2 id="controller-name">Controller Not Found...</h2>
+                                                    <h3 id="ctrlstatus">Controller Status: Disconnected </h3>
+                                                    <div class="table-wrapper">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Analog Left Y-axis</td>
+                                                                    <td id="left-analog">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Analog Right Y-axis</td>
+                                                                    <td id="right-analog">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Right Bumper</td>
+                                                                    <td id="arm-up">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Left Bumper</td>
+                                                                    <td id="arm-down">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Fire Sequence</td>
+                                                                    <td id="fire-trigger1">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Fire Sequence Graphics</td>
+                                                                    <td id="fire-trigger2">---</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+									                </div>
+                                                 </section>
+                                                
+                                             </span>
+                                            </div>
+										</div>
+									</div>
+                                </section>
+                        </div>
+                    </section>
+
+			</div>
 
 		<!-- Scripts -->
+  
+
         <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js')}}"></script>
@@ -29,6 +145,8 @@
         <script src="{{ url_for('static', filename='js/breakpoints.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/util.js')}}"></script>
         <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.min.js"></script>
+        <script src="{{ url_for('static', filename='js/ctrl.js')}}"></script>
 
 	</body>
 </html>
