@@ -13,6 +13,7 @@ ser = serial.Serial('COM3', baudrate = 9600, timeout=1)
 
 # # Serial returning
 def returnSerial():
+#    print("Step 1: read in Serial from ADR") 
    finalResult = []
    arduinoData = ser.readline().decode('Ascii')
    dirtyArrayFormat = ((arduinoData).split(','))
@@ -26,6 +27,7 @@ def returnSerial():
         print(removeSpace)
         print("loading...")
    socket.send(finalResult)
+#    print("Step 2: Finish formatting in array and send to JS via ws")
 
 # Main page
 @app.route("/")
@@ -56,6 +58,11 @@ def elements():
 @socket.on('message')
 def handleMsg(msg):
     returnSerial()
+    # print("Step 7: Sent controller code over serial")
+
+    # When receiving a message from WS, take in convert it to bytes, and send it over serial 
+    res = bytes(msg, 'utf-8')
+    ser.write(res)
 
 # Start Flask Server w/ Socketio
 if __name__ == "__main__":

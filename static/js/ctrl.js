@@ -8,6 +8,7 @@ const fireTrigger1 = document.getElementById('fire-trigger1')
 const fireTrigger2 = document.getElementById('fire-trigger2')
 
 
+
 function getAnalog(anaNum) {
     if (anaNum == 0){
     return "00";
@@ -48,12 +49,19 @@ socket.on('disconnect',function(){
 
 // Receiving data and asking for data back, will also serve as the controller feedback and accumulation  
 socket.on('message',function(msg){
-    
+    // console.log("Step 3 receive Array data via WS")
+    controllerCode = "000000000"
+    if (msg.length != 0 ){
+        document.getElementById("potVoltage").innerHTML =  msg[0]
+        document.getElementById("xTilt").innerHTML =  msg[1]
+        document.getElementById("yTilt").innerHTML =  msg[2]
+        document.getElementById("zTilt").innerHTML =  msg[3]
+        // console.log("Step 4: Finish changing HTML Data")
+    } else {
+        // console.log("no can do buckaroo")
+    }
     // Receiving and displaying
-    document.getElementById("potVoltage").innerHTML =  msg[0]
-    document.getElementById("xTilt").innerHTML =  msg[1]
-    document.getElementById("yTilt").innerHTML =  msg[2]
-    document.getElementById("zTilt").innerHTML =  msg[3]
+    
 
 
     // console.log("called")
@@ -78,8 +86,8 @@ socket.on('message',function(msg){
             Raxes: gamepads[0].axes[3].toFixed(2),
             ArmUp: gamepads[0].buttons[5].pressed,
             ArmDown: gamepads[0].buttons[4].pressed,
-            FireOne: gamepads[0].buttons[0].pressed,
-            FireTwo: gamepads[0].buttons[2].pressed
+            FireOne: gamepads[0].buttons[3].pressed,
+            FireTwo: gamepads[0].buttons[12].pressed
         }
         // Print gamepad in general
         // console.log(gamepadState)
@@ -107,12 +115,15 @@ socket.on('message',function(msg){
 
         // controllerCode to send to serial
         controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + fireOnePh + fireTwoPh
+        // console.log("Step 5 Assemble controller code")
         console.log(controllerCode)
+        
     }
 
 
     // Send out to Receive more
-    socket.send('ctrl');
+    socket.send(controllerCode);
+    // console.log("Step 6: Send controller code back over WS")
     
 })
 

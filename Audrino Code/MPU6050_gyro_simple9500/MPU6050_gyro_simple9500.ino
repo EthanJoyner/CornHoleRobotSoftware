@@ -51,17 +51,6 @@ void loop()
   roll = roll + norm.XAxis * timeStep;
   yaw = yaw + norm.ZAxis * timeStep;
 
-  // Output raw
-//  Serial.print(voltage);
-//  Serial.print(", ");
-////  Serial.print(" Pitch = ");
-//  Serial.print(pitch);
-//  Serial.print(", ");
-////  Serial.print(" Roll = ");
-//  Serial.print(roll); 
-//  Serial.print(", "); 
-////  Serial.print(" Yaw = ");
-//  Serial.println(yaw);
   String sensorCode = String(voltage)+ ", " + String(pitch) + ", " + String(roll) + ", " + String(yaw);
   Serial.println(sensorCode);
   // Wait to full timeStep period
