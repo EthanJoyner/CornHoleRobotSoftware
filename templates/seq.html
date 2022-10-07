@@ -14,31 +14,154 @@
 	</head>
 	<body class="is-preload">
 
-		<!-- Header -->
-        <header id="header">
-            <a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME</a>
-        </header>
+    <!-- Header -->
+    <header id="header">
+        <a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME - Sequence Pge</a>
+    </header>
 
-        Code goes Here seq
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">	
 
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#">HTML</a></li>
-              <li><a href="#">CSS</a></li>
-              <li><a href="#">JavaScript</a></li>
-            </ul>
-          </div>
+          <!-- Data -->
+            <section class="">
+              <div class="box alt ">
+                <div class="row gtr-uniform align-center">
 
-		<!-- Scripts -->
-        <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/browser.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/breakpoints.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/util.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+                  <!-- Previous Command -->
+                  <div class="col-4"><span class="fit"> 
+                    <h2>Pervious Command</h2>
+                    
+                  </span></div>
 
-	</body>
+                  <!-- Terminal -->
+                  <div class="col-4"><span class="fit align-center"> 
+                      <section>
+                          <h2>Terminal</h2>
+                          <div class="container">
+                            <h3>Movement Types</h3>
+                            <p>
+                              <ol>
+                                <li>MoveForward</li>
+                                <li>MoveBackward</li>
+                                <li>ArmUp</li>
+                                <li>ArmDown</li>
+                                <li>PressureTo</li>
+                              </ol>
+                              Format:
+                              <code>
+                                MovementType(index,time)
+                              </code>
+                            </p>
+                            <div class="row">
+                              <div class="col-25">
+                                <h3>Input console</h3>
+                              </div>
+                              <div class="col-75">
+                                <input type="text" id="seqCode" name="Sequence Code" placeholder="Enter sequence code here...">
+                              </div>
+                              <br>
+                            </div>
+                          </div>
+                        </section>
+                        <br>
+                        <div class="row">
+                          <button id="pcButton" onclick="processCode()" ><span style="padding: 40px;">Submit Code</span></button>
+                        </div>
+                  </span></div>
+
+                  <!-- Sequence 1 -->
+                  <div class="col-4"><span class="fit align-center"> 
+                    <section>
+                      <h2>Sequence</h2>
+                      <h6 title="If you enter a index before another that is blank, the index will not show up on HTML but it is in the system">There is a bug to note. Hover over to view.</h6>
+                        <div class="table-wrapper">
+                          <table>
+                              <thead>
+                                  <tr>
+                                      <th>Index</th>
+                                      <th>Movement type</th>
+                                      <th>Time(ms)</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>0</td>
+                                  <td id="step-1">---</td>
+                                  <td id="stepT-1">---</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td id="step-2">---</td>
+                                    <td id="stepT-2">---</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td id="step-3">---</td>
+                                    <td id="stepT-3">---</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td id="step-4">---</td>
+                                    <td id="stepT-4">---</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td id="step-5">---</td>
+                                    <td id="stepT-5">---</td>
+                                </tr>
+                                <tr>
+                                  <td>5</td>
+                                  <td id="step-6">---</td>
+                                  <td id="stepT-6">---</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td id="step-7">---</td>
+                                    <td id="stepT-7">---</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td id="step-8">---</td>
+                                    <td id="stepT-8">---</td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td id="step-9">---</td>
+                                    <td id="stepT-9">---</td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td id="step-10">---</td>
+                                    <td id="stepT-10">---</td>
+                                </tr>
+                              </tbody>  
+                          </table>
+                        </div>
+                        <div class="row">
+                          <button onclick="sendSeq()" ><span style="padding: 40px;">Send Code to Robot</span></button>
+                        </div>
+                    </section> 
+                  </span></div>
+
+                  
+                </div>
+
+              </div>
+            </section>
+
+        </div>
+      </section>
+  </body>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/browser.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/breakpoints.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/util.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/seq.js')}}"></script>
+
 </html>

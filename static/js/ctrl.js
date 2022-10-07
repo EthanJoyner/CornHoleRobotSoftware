@@ -113,6 +113,13 @@ socket.on('message',function(msg){
         fireTrigger1.textContent = fireOnePh
         fireTrigger2.textContent =fireTwoPh
 
+        if ( armUpPh == "1" && armDownPh == "1"){
+            armDownPh = "0"
+            armUpPh = "0"
+            document.getElementById("arm-up").innerHTML = "Act. Safety Condition Triggered!"
+            document.getElementById("arm-down").innerHTML = "Resulting to 0!"
+        }
+
         // controllerCode to send to serial
         controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + fireOnePh + fireTwoPh
         // console.log("Step 5 Assemble controller code")
