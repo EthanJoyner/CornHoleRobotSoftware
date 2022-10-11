@@ -31,7 +31,27 @@
                   <!-- Previous Command -->
                   <div class="col-4"><span class="fit"> 
                     <h2>Pervious Command</h2>
-                    
+                    <h3>Last updated: <span id="updateTime"></span></h3>
+
+                    <code id="previousCmd-0"></code>
+                    <br>
+                    <code id="previousCmd-1"></code>
+                    <br>
+                    <code id="previousCmd-2"></code>
+                    <br>
+                    <code id="previousCmd-3"></code>
+                    <br>
+                    <code id="previousCmd-4"></code>
+                    <br>
+                    <code id="previousCmd-5"></code>
+                    <br>
+                    <code id="previousCmd-6"></code>
+                    <br>
+                    <code id="previousCmd-7"></code>
+                    <br>
+                    <code id="previousCmd-8"></code>
+                    <br>
+                    <code id="previousCmd-9"></code>
                   </span></div>
 
                   <!-- Terminal -->
@@ -44,6 +64,8 @@
                               <ol>
                                 <li>MoveForward</li>
                                 <li>MoveBackward</li>
+                                <li>TurnLeft</li>
+                                <li>TurnRight</li>
                                 <li>ArmUp</li>
                                 <li>ArmDown</li>
                                 <li>PressureTo</li>
@@ -74,7 +96,6 @@
                   <div class="col-4"><span class="fit align-center"> 
                     <section>
                       <h2>Sequence</h2>
-                      <h6 title="If you enter a index before another that is blank, the index will not show up on HTML but it is in the system">There is a bug to note. Hover over to view.</h6>
                         <div class="table-wrapper">
                           <table>
                               <thead>
@@ -139,7 +160,7 @@
                           </table>
                         </div>
                         <div class="row">
-                          <button onclick="sendSeq()" ><span style="padding: 40px;">Send Code to Robot</span></button>
+                          <button id="finalTrigger" onclick="sendSeq()" class="button primary" ><span style="padding: 40px;">Send Code to Robot</span></button>
                         </div>
                     </section> 
                   </span></div>

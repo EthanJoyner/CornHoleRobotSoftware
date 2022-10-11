@@ -44,16 +44,21 @@ function checkIdx(input){
         alert("invalid index")
         return "F"
     } else {
-        return input
+        return Math.abs(Number(input)).toString()
     }
 }
 
 function checkTime(input){
-    if (isNaN(Number(input))){
+    if (isNaN(Number(input)) || String(input).length > 4 ){
         alert("Invalid Time \nRemember: You should not use terminating symbols.")
         return "F"
     } else {
-        return input
+        // Creating four digits
+        output = String(Math.abs(input))
+        for (i = 0; output.length < 4; i++){
+            output = "0" + output
+        }
+        return output
     }
 }
 
@@ -121,6 +126,17 @@ function sequenceToHtml(input){
     document.getElementById("stepT-10").innerHTML = idx9[2]
 }
 
+function fillBlanks(input){
+    for (seqIdx = 0; seqIdx <=9; seqIdx++){
+        currentSequenceIdx = input[seqIdx]
+        if (currentSequenceIdx == undefined){
+            input[seqIdx] = ["0", "0", "0000"]
+        }
+        
+    }
+    return input
+}
+
 function processCode() {
     // Take in input
     var input = document.getElementById("seqCode").value;
@@ -159,18 +175,47 @@ function processCode() {
 }
 
 function sendSeq(){
-    // Fill in input blanks
+    document.getElementById("finalTrigger").style.visibility = "hidden";
+    // // Fill in input blanks
+    completeSeq = fillBlanks(sequence)
     console.log("signal")
-    console.log(sequence)
+    console.log(completeSeq) 
 
-    // Separate times and movements 
-    times = [] 
-    moves = []
-
-    // index through times and movements and send out serial and wait commands accordingly \
-
-    // clean sequence
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
     
+    async function sendOut() {
+        
+        for (let i = 0; i < completeSeq.length; i++) {
+            jsWaitTime = Number(completeSeq[i][2])+1000
+            console.log("2"+completeSeq[i][0]+completeSeq[i][2])
+            await sleep(jsWaitTime);
+        }
+        document.getElementById("finalTrigger").style.visibility = "visible";
+        console.log('Done');
+    }
+    
+    sendOut();
+
+    // Send out last command 
+    document.getElementById("updateTime").innerHTML = new Date()
+
+    for (i = 0; i < 10; i++){
+        currentId = "previousCmd-"+i
+        document.getElementById(currentId).innerHTML = "Idx "+ i + ": " + completeSeq[i]
+    }
+    
+
+
+    // clean sequence  
     sequence = []
     sequenceToHtml(sequence)
+  
+
+
+
+
+
+    
 }
