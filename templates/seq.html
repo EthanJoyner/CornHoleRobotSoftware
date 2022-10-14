@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Hyperspace by HTML5 UP</title>
+		<title>CHR-ROBOT_NAME Sequence Page</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" />
@@ -17,6 +17,21 @@
     <!-- Header -->
     <header id="header">
         <a href="{{ url_for('main')}}" class="title">CHR-ROBOT_NAME - Sequence Pge</a>
+    </header>
+    <header id="header">
+      <h3 style="padding-right: 10px; padding-left: 10px;" id="ctrlstatus" >Controller Status: </h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;" id="iostatus"></h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;">Robot Voltage: <span id="potVoltage"></span></h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;">X-Tilt: <span id="xTilt"></span></h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;">Y-Tilt: <span id="yTilt"></span></h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;">Z-Tilt: <span id="zTilt"></span></h3>
+      <br>
+      <h3 style="padding-right: 10px; padding-left: 10px;">Tank PSI: <span></span></h3>
     </header>
 
       <!-- Main -->
@@ -33,25 +48,25 @@
                     <h2>Pervious Command</h2>
                     <h3>Last updated: <span id="updateTime"></span></h3>
 
-                    <code id="previousCmd-0"></code>
+                    <code id="previousCmd-0">No History Found...</code>
                     <br>
-                    <code id="previousCmd-1"></code>
+                    <code id="previousCmd-1">No History Found...</code>
                     <br>
-                    <code id="previousCmd-2"></code>
+                    <code id="previousCmd-2">No History Found...</code>
                     <br>
-                    <code id="previousCmd-3"></code>
+                    <code id="previousCmd-3">No History Found...</code>
                     <br>
-                    <code id="previousCmd-4"></code>
+                    <code id="previousCmd-4">No History Found...</code>
                     <br>
-                    <code id="previousCmd-5"></code>
+                    <code id="previousCmd-5">No History Found...</code>
                     <br>
-                    <code id="previousCmd-6"></code>
+                    <code id="previousCmd-6">No History Found...</code>
                     <br>
-                    <code id="previousCmd-7"></code>
+                    <code id="previousCmd-7">No History Found...</code>
                     <br>
-                    <code id="previousCmd-8"></code>
+                    <code id="previousCmd-8">No History Found...</code>
                     <br>
-                    <code id="previousCmd-9"></code>
+                    <code id="previousCmd-9">No History Found...</code>
                   </span></div>
 
                   <!-- Terminal -->
@@ -75,6 +90,7 @@
                                 MovementType(index,time)
                               </code>
                             </p>
+                          
                             <div class="row">
                               <div class="col-25">
                                 <h3>Input console</h3>
@@ -183,6 +199,8 @@
   <script src="{{ url_for('static', filename='js/breakpoints.min.js')}}"></script>
   <script src="{{ url_for('static', filename='js/util.js')}}"></script>
   <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.min.js"></script>
   <script src="{{ url_for('static', filename='js/seq.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/seqSensorController.js')}}"></script>
 
 </html>

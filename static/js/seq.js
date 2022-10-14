@@ -1,13 +1,16 @@
+// sequence variable to hold seq data  
 sequence = []
 
-var textbox = document.getElementById("seqCode");
-textbox.addEventListener("keypress", function(event) {
+// Allows for user to hit enter in the input to send the data to the sequence. 
+var textBox = document.getElementById("seqCode");
+textBox.addEventListener("keypress", function(event) {
   if (event.key === "Enter") {
     event.preventDefault();
     document.getElementById("pcButton").click();
   }
 })
 
+// Reads the words of a given sequence code
 function checkMovement(input){
     console.log(input)
 
@@ -39,6 +42,7 @@ function checkMovement(input){
     }
 }
 
+// validates the index parameter
 function checkIdx(input){
     if (input > 9 || isNaN(Number(input))){
         alert("invalid index")
@@ -48,6 +52,7 @@ function checkIdx(input){
     }
 }
 
+// validates the time parameter
 function checkTime(input){
     if (isNaN(Number(input)) || String(input).length > 4 ){
         alert("Invalid Time \nRemember: You should not use terminating symbols.")
@@ -62,6 +67,7 @@ function checkTime(input){
     }
 }
 
+// When a sequence is added in index, if put out of order, this code fixes the indexes not appearing bug
 function checkHtml(input){
    if (input == undefined){
     return ["---","---","---"]
@@ -72,6 +78,7 @@ function checkHtml(input){
 
 } 
 
+// Sends the Sequence from the input to the Sequence Table 
 function sequenceToHtml(input){
     input = input
     
@@ -126,6 +133,7 @@ function sequenceToHtml(input){
     document.getElementById("stepT-10").innerHTML = idx9[2]
 }
 
+// If there is a blank index is the the full sequence of sequences, this code fills in the blanks
 function fillBlanks(input){
     for (seqIdx = 0; seqIdx <=9; seqIdx++){
         currentSequenceIdx = input[seqIdx]
@@ -137,6 +145,7 @@ function fillBlanks(input){
     return input
 }
 
+// Interpreter for the input text/code
 function processCode() {
     // Take in input
     var input = document.getElementById("seqCode").value;
@@ -175,47 +184,58 @@ function processCode() {
 }
 
 function sendSeq(){
-    document.getElementById("finalTrigger").style.visibility = "hidden";
-    // // Fill in input blanks
+    // Disable the "send code to robot" button 
+    document.getElementById("finalTrigger").className = "button primary disabled";
+    document.getElementById("finalTrigger").innerHTML = "Executing Code...";
+    
+    // Fill in full sequence blanks
     completeSeq = fillBlanks(sequence)
     console.log("signal")
     console.log(completeSeq) 
 
+    // Sleep function for the async function
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     
+    //  Send out the subsequences in a timely fashion
     async function sendOut() {
         
+        // Each time that is associated with the subsequence, 1000 ms is added on top just as a buffer on the js side. 
         for (let i = 0; i < completeSeq.length; i++) {
             jsWaitTime = Number(completeSeq[i][2])+1000
             console.log("2"+completeSeq[i][0]+completeSeq[i][2])
             await sleep(jsWaitTime);
         }
-        document.getElementById("finalTrigger").style.visibility = "visible";
-        console.log('Done');
+        //  Re-enable button from finishing full sequence 
+        document.getElementById("finalTrigger").className = "button primary";
+        document.getElementById("finalTrigger").innerHTML = "SEND CODE TO ROBOT";
     }
     
-    sendOut();
+    // The gamepad is still needed for firing. But the gamepad will disturb the sequence signal. So the user need to make sure that the gamepad is not connected when ending the sequence   
+    if (navigator.getGamepads()[0] != null){
+        alert("Controller Connected. \nDisconnect controller and Try again.")
+        // r
+        document.getElementById("finalTrigger").className = "button primary";
+        document.getElementById("finalTrigger").innerHTML = "SEND CODE TO ROBOT";
+    } else {
 
-    // Send out last command 
-    document.getElementById("updateTime").innerHTML = new Date()
+        sendOut();
 
-    for (i = 0; i < 10; i++){
+        // Send out last command 
+        document.getElementById("updateTime").innerHTML = new Date()
+         for (i = 0; i < 10; i++){
         currentId = "previousCmd-"+i
         document.getElementById(currentId).innerHTML = "Idx "+ i + ": " + completeSeq[i]
+         }
+    
+        // clean sequence  
+        sequence = []
+        sequenceToHtml(sequence)
     }
+
     
 
-
-    // clean sequence  
-    sequence = []
-    sequenceToHtml(sequence)
-  
-
-
-
-
-
+    
     
 }
