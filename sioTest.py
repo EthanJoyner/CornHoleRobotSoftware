@@ -9,7 +9,7 @@ app.config['SECRET_KEY']= "bruh"
 socket = SocketIO(app)
 
 # Serial Setup
-# ser = serial.Serial('COM3', baudrate = 9600, timeout=1)
+ser = serial.Serial('COM3', baudrate = 9600, timeout=1)
 
 # # Serial returning
 def returnSerial():
@@ -27,7 +27,7 @@ def returnSerial():
         print(removeSpace)
         print("loading...")
    socket.send(finalResult)
-#    print("Step 2: Finish formatting in array and send to JS via ws")
+#   print("Step 2: Finish formatting in array and send to JS via ws")
 
 # Main page
 @app.route("/")
