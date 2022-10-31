@@ -1,3 +1,21 @@
+#define RPWM_1 3 // define pin 3 for RPWM pin (output)
+#define R_EN_1 4 // define pin 2 for R_EN pin (input)
+#define R_IS_1 5 // define pin 5 for R_IS pin (output)
+
+#define LPWM_1 6 // define pin 6 for LPWM pin (output)
+#define L_EN_1 7 // define pin 7 for L_EN pin (input)
+#define L_IS_1 8 // define pin 8 for L_IS pin (output)
+// motor 1 pins end here
+
+
+#define CW 1 //
+#define CCW 0 //
+#define debug 1 //
+
+#include <RobojaxBTS7960.h>
+RobojaxBTS7960 motor1(R_EN_1,RPWM_1,R_IS_1, L_EN_1,LPWM_1,L_IS_1,0);//define motor 1 object
+
+
 #include <Wire.h>
 #include <MPU6050.h>
 
@@ -24,13 +42,42 @@ int fire2;
 //Seq Variables
 int moveType;
 int moveTime; 
+int compressorRelay = 7;
+int valveRelay = 13;
+
+void motorFunction(int input){
+  int inputInt = input;
+  int currentSpeed = 0;
+  if (inputInt > 50){
+    // Forward
+    currentSpeed = (inputInt * 0.5) + 50;
+    motor1.rotate(currentSpeed,CW);
+    delay(10);
+    
+  } else if (inputInt < 50){
+    // Backward
+    currentSpeed = (inputInt * -0.5) + 50;
+    motor1.rotate(currentSpeed,CCW);
+    delay(10);
+    
+  } else if (inputInt == 50){
+    motor1.stop();
+    delay(10);
+  
+  } else if (inputInt == 99){
+      motor1.rotate(100,CW);
+      delay(10);
+
+     }
+  }
 
 void setup() 
 {
   Serial.begin(9600);
   Serial.setTimeout(50);
   pinMode(LED_BUILTIN, OUTPUT);
-  
+  pinMode(compressorRelay, OUTPUT);
+  pinMode(valveRelay, OUTPUT);
   // Initialize MPU6050
   while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
   {
@@ -45,10 +92,11 @@ void setup()
   // Set threshold sensivty. Default 3.
   // If you don't want use threshold, comment this line or set 0.
   mpu.setThreshold(3);
+  motor1.begin();
 }
 
 void loop()
-{
+{      
 // Start data take in
 while (Serial.available() > 0){
       
@@ -64,33 +112,18 @@ while (Serial.available() > 0){
       armDown = dataIn.substring(6,7).toInt();
       fire1 = dataIn.substring(7,8).toInt();
       fire2 = dataIn.substring(8,9).toInt();
-    
-     //Do something with the data - like print it
-//      Serial.print("Code: ");
-//      Serial.println(dataIn);
-//    
-//      Serial.print("Type: ");
-//      Serial.println(signalType);
-//      
-//      Serial.print("AL: ");
-//      Serial.println(analogLeft);
-//      
-//      Serial.print("AR: ");
-//      Serial.println(analogRight);
-//      
-//      Serial.print("AU: ");
-//      Serial.println(armUp);
-//      
-//      Serial.print("AD: ");
-//      Serial.println(armDown);
-//      
-//      Serial.print("Fire1: ");
-//      Serial.println(fire1);
-//      
-//      Serial.print("Fire2: ");
-//      Serial.println(fire2); 
-      
-      } else if (dataIn.substring(0,1).toInt() == 2){
+
+      motorFunction(analogLeft); 
+   
+    if(fire1 == 1 && fire2 == 1){
+        digitalWrite(valveRelay, HIGH);
+      }
+      else{
+        digitalWrite(valveRelay, LOW);
+      }
+
+//      If a type 2 command (sequence Command)
+    } else if (dataIn.substring(0,1).toInt() == 2){
   
         //Do something with the data - like print it
         Serial.print("Code: ");
@@ -100,11 +133,6 @@ while (Serial.available() > 0){
         moveType = dataIn.substring(1,2).toInt();
         moveTime = dataIn.substring(2,6).toInt();
   
-//        Serial.print("Type: ");
-//        Serial.println(signalType); 
-//  
-//        Serial.print("Movetype: ");
-//        Serial.println(moveType); 
   
         switch (moveType){
           // Move forward
@@ -136,23 +164,24 @@ while (Serial.available() > 0){
           case 6:
 //            Serial.println("Arm Down");
             break;
+
+            // Compress to
+          case 7:
+//            Serial.println("compress to");
+            break;
             
           // Default
           default:
 //            Serial.println("Invalid Movement Code");
             break;
           }
-        
-//        Serial.print("Time: ");
-//        Serial.println(moveTime); 
        
         
         } else {
-//          Serial.println("No Signal...");
-          //Do something with the data - like print it
-//          Serial.print("Code: ");
-//          Serial.println(dataIn);
-          
+            // Serial.println("No Signal...");
+            // Do something with the data - like print it
+            // Serial.print("Code: ");
+            // Serial.println(dataIn);
           }
 
     // Start data Send out
