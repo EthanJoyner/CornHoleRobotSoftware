@@ -1,7 +1,7 @@
 from socket import socket
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-import serial
+import serial 
 import time
 # Flask Set up
 app = Flask(__name__)
@@ -9,7 +9,7 @@ app.config['SECRET_KEY']= "bruh"
 socket = SocketIO(app)
 
 # Serial Setup
-ser = serial.Serial('COM3', baudrate = 9600, timeout=1)
+ser = serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout=1)
 
 # # Serial returning
 def returnSerial():
