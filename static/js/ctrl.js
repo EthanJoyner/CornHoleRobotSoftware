@@ -1,3 +1,4 @@
+console.log("Start")
 // Create constants
 const gamepadDisplay = document.getElementById('controller-name')
 const leftAnalog = document.getElementById('left-analog')
@@ -51,14 +52,14 @@ socket.on('disconnect',function(){
 
 // Receiving data and asking for data back, will also serve as the controller feedback and accumulation  
 socket.on('message',function(msg){
-    // console.log("Step 3 receive Array data via WS")
+    console.log("Step 3 receive Array data via WS")
     controllerCode = "000000000"
     if (msg.length != 0 ){
         document.getElementById("potVoltage").innerHTML =  msg[0]
         document.getElementById("xTilt").innerHTML =  msg[1]
         document.getElementById("yTilt").innerHTML =  msg[2]
         document.getElementById("zTilt").innerHTML =  msg[3]
-        // console.log("Step 4: Finished changing HTML Data")
+        console.log("Step 4: Finished changing HTML Data")
     } else {
         alert("Unexpected Arduino Signal... System my need to be reset. \nProceed With Caution.")
     }
@@ -118,7 +119,7 @@ socket.on('message',function(msg){
 
         // controllerCode to send to serial
         controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + fireOnePh + fireTwoPh
-        // console.log("Step 5 Assemble controller code")
+        console.log("Step 5 Assemble controller code")
         console.log(controllerCode)
         
     }
@@ -126,7 +127,8 @@ socket.on('message',function(msg){
 
     // Send out to Receive more
     socket.send(controllerCode);
-    // console.log("Step 6: Send controller code back over WS")
+    console.log("Step 6: Send controller code back over WS")
     
 })
 
+console.log("finished")
