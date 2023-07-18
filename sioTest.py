@@ -11,7 +11,7 @@ socket = SocketIO(app)
 # Serial Setup
 ser = serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout=1)
 
-# # Serial returning
+# Serial returning
 def returnSerial():
    print("Step 1: read in Serial from ADR") 
    finalResult = []
