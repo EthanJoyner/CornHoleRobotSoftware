@@ -62,11 +62,11 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Tank PSI</td>
-                                                                    <td id="zTilt">---</td>
+                                                                    <td id="tankPSI">---</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Compressor Temperature</td>
-                                                                    <td id="zTilt">---</td>
+                                                                    <td id="compressorTempature">---</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -79,6 +79,13 @@
                                                 <section>
                                                     <h2 id="controller-name">Controller Not Found...</h2>
                                                     <h3 id="ctrlstatus">Controller Status: Disconnected </h3>
+                                                    <label for="cars">Seclect Driving Configuratation:</label>
+                                                        <select name="cars" id="cars">
+                                                        <option value="volvo">Standard Tank Drive</option>
+                                                        <option value="saab">Left Hand Arcade Drive</option>
+                                                        <option value="mercedes">Right Hand Arcade Drive</option>
+                                                        </select>
+                                                        <br>
                                                     <div class="table-wrapper">
                                                         <table>
                                                             <thead>
@@ -88,13 +95,14 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>Analog Left Y-axis</td>
-                                                                    <td id="left-analog">---</td>
-                                                                </tr>
+                                                                
                                                                 <tr>
                                                                     <td>Analog Right Y-axis</td>
                                                                     <td id="right-analog">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Analog Left Y-axis</td>
+                                                                    <td id="left-analog">---</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Right Bumper</td>
@@ -105,12 +113,16 @@
                                                                     <td id="arm-down">---</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Fire Sequence</td>
+                                                                    <td>Fire Trigger 1</td>
                                                                     <td id="fire-trigger1">---</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Fire Sequence Graphics</td>
+                                                                    <td>Fire Trigger 2</td>
                                                                     <td id="fire-trigger2">---</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Target PSI</b></td>
+                                                                    <td id="target-psi">---</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

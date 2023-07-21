@@ -1,4 +1,4 @@
-console.log("Start")
+// console.log("Start")
 // Create constants
 const gamepadDisplay = document.getElementById('controller-name')
 const leftAnalog = document.getElementById('left-analog')
@@ -8,6 +8,8 @@ const armDown = document.getElementById('arm-down')
 const fireTrigger1 = document.getElementById('fire-trigger1')
 const fireTrigger2 = document.getElementById('fire-trigger2')
 
+// Define current target psi variable
+currentTargetPsi = 0 
 
 // The -100:100 analog signal is not inherently compatible with the Arduino Signal (that was planned). So this function makes it a two digit signal and limits it from 00:99   
 function getAnalog(anaNum) {
@@ -22,6 +24,18 @@ function getAnalog(anaNum) {
     }
 
 }
+
+function formatPSI(psiValue){
+    if (psiValue == 0){
+        return "000";
+    } else if (psiValue > 0 && psiValue < 10) {
+        return "00" + psiValue
+    } else if (psiValue >= 10 && psiValue < 100) {
+        return "0" + psiValue
+    } else if (psiValue >= 100 ) {
+        return psiValue
+    } 
+} 
 
 // The gamepad API returns true or false. So this function will return a "1" or "0" for the planned final Signal 
 function getDigital(dSignal){
@@ -52,14 +66,19 @@ socket.on('disconnect',function(){
 
 // Receiving data and asking for data back, will also serve as the controller feedback and accumulation  
 socket.on('message',function(msg){
-    console.log("Step 3 receive Array data via WS")
-    controllerCode = "000000000"
+    // console.log("Step 3 receive Array data via WS")
+    controllerCode = "00000000000"
     if (msg.length != 0 ){
         document.getElementById("potVoltage").innerHTML =  msg[0]
         document.getElementById("xTilt").innerHTML =  msg[1]
         document.getElementById("yTilt").innerHTML =  msg[2]
         document.getElementById("zTilt").innerHTML =  msg[3]
-        console.log("Step 4: Finished changing HTML Data")
+        document.getElementById("tankPSI").innerHTML =  msg[4]
+        document.getElementById("compressorTempature").innerHTML =  msg[5]
+        
+        // console.log("Step 4: Finished changing HTML Data")
+    } else if (msg = "Could not find a valid MPU6050 sensor"){
+        alert("MPU6050 Sensor (IMU) isn't Responding.\n Check wiring.")
     } else {
         alert("Unexpected Arduino Signal... System my need to be reset. \nProceed With Caution.")
     }
@@ -83,8 +102,10 @@ socket.on('message',function(msg){
             ArmUp: gamepads[0].buttons[5].pressed,
             ArmDown: gamepads[0].buttons[4].pressed,
             FireOne: gamepads[0].buttons[3].pressed,
-            FireTwo: gamepads[0].buttons[12].pressed
-        }
+            FireTwo: gamepads[0].buttons[12].pressed,
+            IncreasePSI: gamepads[0].buttons[9].pressed,
+            DecreasePSI: gamepads[0].buttons[8].pressed
+        } 
 
         // Gamepad print outs 
 
@@ -103,11 +124,21 @@ socket.on('message',function(msg){
         armDownPh =getDigital(JSON.parse(JSON.stringify(gamepadState.ArmDown,null,2)))
         fireOnePh =getDigital(JSON.parse(JSON.stringify(gamepadState.FireOne,null,2)))
         fireTwoPh =getDigital(JSON.parse(JSON.stringify(gamepadState.FireTwo,null,2)))
+        increase = getDigital(JSON.parse(JSON.stringify(gamepadState.IncreasePSI,null,2)))
+        decrease = getDigital(JSON.parse(JSON.stringify(gamepadState.DecreasePSI,null,2)))
+        
     
         armUp.textContent = armUpPh
         armDown.textContent = armDownPh
         fireTrigger1.textContent = fireOnePh
-        fireTrigger2.textContent =fireTwoPh
+        fireTrigger2.textContent = fireTwoPh
+
+        // Check to fire
+        if (fireOnePh == "1" && fireTwoPh == "1"){
+            userReadyToFire = "1"
+        } else {
+            userReadyToFire = "0"
+        }
 
         //  We don't want the arm actuation being told to move up and down at the same time. So this prohibits that from happening.
         if ( armUpPh == "1" && armDownPh == "1"){
@@ -117,9 +148,24 @@ socket.on('message',function(msg){
             document.getElementById("arm-down").innerHTML = "Resulting to 0!"
         }
 
+        // To increase and decrease the target PSI
+        if(increase == "1"){
+            currentTargetPsi++
+        } else if (decrease == "1"){
+            currentTargetPsi--
+        } else if (currentTargetPsi < 0){
+            currentTargetPsi = 0
+        } else if (currentTargetPsi >= 110){
+            currentTargetPsi = 110
+        }
+
+
+
+        document.getElementById("target-psi").innerHTML = formatPSI(currentTargetPsi)
+
         // controllerCode to send to serial
-        controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + fireOnePh + fireTwoPh
-        console.log("Step 5 Assemble controller code")
+        controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + userReadyToFire + formatPSI(currentTargetPsi)
+        // console.log("Step 5 Assemble controller code")
         console.log(controllerCode)
         
     }
@@ -127,8 +173,8 @@ socket.on('message',function(msg){
 
     // Send out to Receive more
     socket.send(controllerCode);
-    console.log("Step 6: Send controller code back over WS")
+    // console.log("Step 6: Send controller code back over WS")
     
 })
 
-console.log("finished")
+// console.log("finished")
