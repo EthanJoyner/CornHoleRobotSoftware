@@ -95,86 +95,83 @@ socket.on('message',function(msg){
     // Create gamepad JSON variable to index from
     const gamepads = navigator.getGamepads()
     if (gamepads[0]){
-        const gamepadState = {
-            id: gamepads[0].id,
-            Laxes: gamepads[0].axes[1].toFixed(2),
-            Raxes: gamepads[0].axes[3].toFixed(2),
-            ArmUp: gamepads[0].buttons[5].pressed,
-            ArmDown: gamepads[0].buttons[4].pressed,
-            FireOne: gamepads[0].buttons[3].pressed,
-            FireTwo: gamepads[0].buttons[12].pressed,
-            IncreasePSI: gamepads[0].buttons[9].pressed,
-            DecreasePSI: gamepads[0].buttons[8].pressed
-        } 
 
-        // Gamepad print outs 
-
-        //  Gamepad Name
-        gamepadDisplay.textContent = JSON.parse(JSON.stringify(gamepadState.id, null,2))
-
-        // Analog Signals
-        leftAnalogConvert = getAnalog(((parseInt(JSON.parse(JSON.stringify(gamepadState.Laxes,null,2))*-50)+50)).toFixed(0))
-        rightAnalogConvert = getAnalog(((parseInt(JSON.parse(JSON.stringify(gamepadState.Raxes,null,2))*-50)+50)).toFixed(0))
-        
-        leftAnalog.textContent = leftAnalogConvert
-        rightAnalog.textContent = rightAnalogConvert
-        
-        // Button Signals
-        armUpPh = getDigital(JSON.parse(JSON.stringify(gamepadState.ArmUp,null,2)))
-        armDownPh =getDigital(JSON.parse(JSON.stringify(gamepadState.ArmDown,null,2)))
-        fireOnePh =getDigital(JSON.parse(JSON.stringify(gamepadState.FireOne,null,2)))
-        fireTwoPh =getDigital(JSON.parse(JSON.stringify(gamepadState.FireTwo,null,2)))
-        increase = getDigital(JSON.parse(JSON.stringify(gamepadState.IncreasePSI,null,2)))
-        decrease = getDigital(JSON.parse(JSON.stringify(gamepadState.DecreasePSI,null,2)))
-        
+            const standardGamepad = {
+                id: gamepads[0].id,
+                Laxes: gamepads[0].axes[1].toFixed(2),
+                Raxes: gamepads[0].axes[3].toFixed(2),
+                ArmUp: gamepads[0].buttons[5].pressed,
+                ArmDown: gamepads[0].buttons[4].pressed,
+                FireOne: gamepads[0].buttons[3].pressed,
+                FireTwo: gamepads[0].buttons[12].pressed,
+                IncreasePSI: gamepads[0].buttons[9].pressed,
+                DecreasePSI: gamepads[0].buttons[8].pressed
+            } 
     
-        armUp.textContent = armUpPh
-        armDown.textContent = armDownPh
-        fireTrigger1.textContent = fireOnePh
-        fireTrigger2.textContent = fireTwoPh
-
-        // Check to fire
-        if (fireOnePh == "1" && fireTwoPh == "1"){
-            userReadyToFire = "1"
-        } else {
-            userReadyToFire = "0"
-        }
-
-        //  We don't want the arm actuation being told to move up and down at the same time. So this prohibits that from happening.
-        if ( armUpPh == "1" && armDownPh == "1"){
-            armDownPh = "0"
-            armUpPh = "0"
-            document.getElementById("arm-up").innerHTML = "Act. Safety Condition Triggered!"
-            document.getElementById("arm-down").innerHTML = "Resulting to 0!"
-        }
-
-        // To increase and decrease the target PSI
-        if(increase == "1"){
-            currentTargetPsi++
-        } else if (decrease == "1"){
-            currentTargetPsi--
-        } else if (currentTargetPsi < 0){
-            currentTargetPsi = 0
-        } else if (currentTargetPsi >= 110){
-            currentTargetPsi = 110
-        }
-
-
-
-        document.getElementById("target-psi").innerHTML = formatPSI(currentTargetPsi)
-
-        // controllerCode to send to serial
-        controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + userReadyToFire + formatPSI(currentTargetPsi)
-        // console.log("Step 5 Assemble controller code")
-        console.log(controllerCode)
+            // Gamepad print outs 
+            //  Gamepad Name
+            gamepadDisplay.textContent = JSON.parse(JSON.stringify(standardGamepad.id, null,2))
+    
+            // Analog Signals
+            leftAnalogConvert = getAnalog(((parseInt(JSON.parse(JSON.stringify(standardGamepad.Laxes,null,2))*-50)+50)).toFixed(0))
+            rightAnalogConvert = getAnalog(((parseInt(JSON.parse(JSON.stringify(standardGamepad.Raxes,null,2))*-50)+50)).toFixed(0))
+            
+            leftAnalog.textContent = leftAnalogConvert
+            rightAnalog.textContent = rightAnalogConvert
+            
+            // Button Signals
+            armUpPh = getDigital(JSON.parse(JSON.stringify(standardGamepad.ArmUp,null,2)))
+            armDownPh =getDigital(JSON.parse(JSON.stringify(standardGamepad.ArmDown,null,2)))
+            fireOnePh =getDigital(JSON.parse(JSON.stringify(standardGamepad.FireOne,null,2)))
+            fireTwoPh =getDigital(JSON.parse(JSON.stringify(standardGamepad.FireTwo,null,2)))
+            increase = getDigital(JSON.parse(JSON.stringify(standardGamepad.IncreasePSI,null,2)))
+            decrease = getDigital(JSON.parse(JSON.stringify(standardGamepad.DecreasePSI,null,2)))
+            
         
-    }
+            armUp.textContent = armUpPh
+            armDown.textContent = armDownPh
+            fireTrigger1.textContent = fireOnePh
+            fireTrigger2.textContent = fireTwoPh
+
+            // Check to fire
+            if (fireOnePh == "1" && fireTwoPh == "1"){
+                userReadyToFire = "1"
+            } else {
+                userReadyToFire = "0"
+            }
+
+            //  We don't want the arm actuation being told to move up and down at the same time. So this prohibits that from happening.
+            if ( armUpPh == "1" && armDownPh == "1"){
+                armDownPh = "0"
+                armUpPh = "0"
+                document.getElementById("arm-up").innerHTML = "Act. Safety Condition Triggered!"
+                document.getElementById("arm-down").innerHTML = "Resulting to 0!"
+            }
+
+            // To increase and decrease the target PSI
+            if(increase == "1"){
+                currentTargetPsi++
+            } else if (decrease == "1"){
+                currentTargetPsi--
+            } else if (currentTargetPsi < 0){
+                currentTargetPsi = 0
+            } else if (currentTargetPsi >= 110){
+                currentTargetPsi = 110
+            }
+
+    document.getElementById("target-psi").innerHTML = formatPSI(currentTargetPsi)
+
+    // controllerCode to send to serial
+    controllerCode = "1"+ leftAnalogConvert + rightAnalogConvert + armUpPh + armDownPh + userReadyToFire + formatPSI(currentTargetPsi)
+    // console.log("Step 5 Assemble controller code")
+    console.log(controllerCode)
 
 
     // Send out to Receive more
     socket.send(controllerCode);
     // console.log("Step 6: Send controller code back over WS")
-    
+}
+
 })
 
 // console.log("finished")
