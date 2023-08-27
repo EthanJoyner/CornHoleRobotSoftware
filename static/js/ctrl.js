@@ -61,6 +61,7 @@ socket.on('connect',function(){
 
 socket.on('disconnect',function(){
     document.getElementById("iostatus").innerHTML =  "WSIO Status: Failed";
+    socket.send("150500000");
 })
 
 
