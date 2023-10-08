@@ -11,9 +11,15 @@
 // Download Libary in the ArduinoLibs Folder
 #include <RobojaxBTS7960.h>
 
-// Downonad the jarzebski MPU6050 library on github 
+// Download the jarzebski MPU6050 library on github 
 #include <MPU6050.h>
 
+// Download DallasTempature 
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Leds
+#include <Adafruit_NeoPixel.h>
 
 // Definitions
 
@@ -51,17 +57,17 @@
 #define BR_L_IS 36 // define pin 8 for L_IS pin (output)
 
 // Providing variables for clockwise and couter-clockwise
-#define CW 1 //
-#define CCW 0 //
+#define CW 1 
+#define CCW 0 
 
-// If you want to debun 
+// If you want to debug
 #define debug 1
 #define noDebug 0
 
 // Analog Sensor Pins
 #define robotVoltage A0
-#define robotPSI A1
-#define robotTemp A2
+#define robotPSI 52
+#define robotTemp 4
 
 // Digital Pins
 #define piezo 2
@@ -69,11 +75,19 @@
 #define valve 38
 #define compressor 39
 
-
-
+// Leds 
+#define led 51
+#define ledCount 7
 
 // Sensor Values
-int roboVolt, roboPsi, roboTemp = 0;
+float roboVolt, roboPsi, roboTemp = 0;
+
+// Tempature Constants
+const int pressureInput = A0; //select the analog input pin for the pressure transducer
+const int pressureZero = 102.4; //analog reading of pressure transducer at 0psi
+const int pressureMax = 921.6; //analog reading of pressure transducer at 100psi
+const int pressuretransducermaxPSI = 100; //psi value of transducer being used
+const int sensorreadDelay = 250; //constant integer to set the sensor read delay in milliseconds
 
 // Timers
 // unsigned long timer = 0;
@@ -84,7 +98,7 @@ float pitch, roll, yaw = 0;
 
 // Controller Variables
 int signalType, analogLeft, analogRight, armUp, armDown, playerFireReady, adminFireReady, targetPSI;
-
+double motorSensitivity = 0.01;
 //Seq Variables
 int moveType, moveTime, compressorRelay, valveRelay;
 
@@ -95,67 +109,112 @@ RobojaxBTS7960 frM2(FR_R_EN, FR_RPWM, FR_R_IS, FR_L_EN, FR_LPWM, FR_L_IS, noDebu
 RobojaxBTS7960 blM3(BL_R_EN, BL_RPWM, BL_R_IS, BL_L_EN, BL_LPWM, BL_L_IS, noDebug);//define motor 3 object
 RobojaxBTS7960 brM4(BR_R_EN, BR_RPWM, BR_R_IS, BR_L_EN, BR_LPWM, BR_L_IS, noDebug);//define motor 4 object
 
-
 MPU6050 mpu;
 
-
-
+OneWire oneWire(robotTemp);
+DallasTemperature sensors(&oneWire);
 
 // Motor Function takes an intervalue on a given axis an
-void motorFunction(int input){
-  int inputInt = input;
-  int currentSpeed = 0;
-  if (inputInt > 50){
+void motorFunction(int inputL, int inputR){
+  int inputIntL = inputL;
+  int inputIntR = inputR;
+  int currentSpeedL = 0;
+  int currentSpeedR = 0;
+  
+  // Left Motors  
+  if (inputIntL > 50 ){
     // Forward
-    currentSpeed = (inputInt * 0.5) + 50;
-    flM1.rotate(currentSpeed,CW);
+    currentSpeedL = (inputIntL * motorSensitivity) + 50;
+    flM1.rotate(currentSpeedL,CW);
     delay(10);
     
-  } else if (inputInt < 50){
+  } else if (inputIntL < 50){
     // Backward
-    currentSpeed = (inputInt * -0.5) + 50;
-    flM1.rotate(currentSpeed,CCW);
+    currentSpeedL = (inputIntL * motorSensitivity) + 50;
+    flM1.rotate(currentSpeedL,CCW);
     delay(10);
     
-  } else if (inputInt == 50){
+  } else if (inputIntL == 50){
     flM1.stop();
     delay(10);
   
-  } else if (inputInt == 99){
+  } else if (inputIntL == 99){
       flM1.rotate(100,CW);
       delay(10);
+      }
 
+// Right Motors
+    if (inputIntR > 50 ){
+        // Forward
+        currentSpeedR = (inputIntR * motorSensitivity) + 50;
+        frM2.rotate(currentSpeedR,CCW);
+        delay(10);
+        
+      } else if (inputIntR < 50){
+        // Backward
+        currentSpeedR = (inputIntR * motorSensitivity) + 50;
+        frM2.rotate(currentSpeedR,CW);
+        delay(10);
+        
+      } else if (inputIntR == 50){
+        frM2.stop();
+        delay(10);
+      
+      } else if (inputIntR == 99){
+          frM2.rotate(100,CW);
+          delay(10);
      }
-  }
+ }
 
-
-
-void setup() 
+void setup(void) 
 {
-  Serial.begin(9600);
-  Serial1.begin(9600);
-  Serial.setTimeout(50);
-  Serial1.setTimeout(50);
-  // pinMode(LED_BUILTIN, OUTPUT);
+  // LEDs Starts
+  Adafruit_NeoPixel strip(ledCount, led, NEO_GRB + NEO_KHZ800);
+
+
+  // Configure Relay and Sensors
   pinMode(compressor, OUTPUT);
   pinMode(valve, OUTPUT);
   pinMode(robotPSI, INPUT);
   pinMode(robotTemp,INPUT);
-  // Initialize MPU6050
+  pinMode(piezo, OUTPUT);
+  
+  // Set up Serial Channels
+  Serial.begin(9600);
+  Serial1.begin(9600);
+  // Set Respnse time to 50ms
+  Serial.setTimeout(50);
+  Serial1.setTimeout(50);
+
+  // Configure Bluetooth Module {Needs work}
+
+  
+// Initilize Motors
+  flM1.begin();
+  delay(100);
+  frM2.begin();
+  delay(100);
+  blM3.begin();
+  delay(100);
+  brM4.begin();
+  delay(100);
+
+// Check Tempature sensor
+  sensors.begin();
+// Check PSI Sensor
+  roboPsi = analogRead(robotPSI); //reads value from input pin and assigns to variable
+  roboPsi = ((roboPsi-pressureZero)*pressuretransducermaxPSI)/(pressureMax-pressureZero); //conversion equation to convert analog reading to psi
+
+// Initialize MPU6050
   while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
   {
     Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
     delay(500);
   }
-  
-  // Calibrate gyroscope. The calibration must be at rest.
-  // If you don't want calibrate, comment this line.
   mpu.calibrateGyro();
-
-  // Set threshold sensivty. Default 3.
-  // If you don't want use threshold, comment this line or set 0.
   mpu.setThreshold(3);
-  flM1.begin();
+  
+ 
 }
 
 void loop()
@@ -179,29 +238,48 @@ while (Serial.available() > 0){
     if (dataIn.substring(0,1).toInt() == 1){
   
       signalType = dataIn.substring(0,1).toInt();
+      // Serial.println("Signal type: " + String(signalType));
       analogLeft = dataIn.substring(1,3).toInt();
+      // Serial.println("Analog Left: " + String(analogLeft));
       analogRight = dataIn.substring(3,5).toInt();
+      //  Serial.println("Analog Right: " + String(analogRight));
       armUp = dataIn.substring(5,6).toInt();
+      // Serial.println("Arm Up: " + String(armUp));
       armDown = dataIn.substring(6,7).toInt();
+      // Serial.println("Arm Down: " + String(armDown));
       playerFireReady = dataIn.substring(7,8).toInt();
-      
+      // Serial.println("Fire: " + String(playerFireReady));
+
+      // Serial.println(dataIn.substring(8,11) + " , " + String(dataIn.substring(8,11).toInt()) );
+
       if (dataIn.substring(8,11) == "und"){
         targetPSI = 0;
       } else {
         targetPSI = dataIn.substring(8,11).toInt();
       }
-      
 
-      motorFunction(analogLeft);
-      motorFunction(analogRight); 
+      motorFunction(analogLeft, analogRight); 
    
     if(playerFireReady == 1 && adminFireReady == 1){
-        digitalWrite(valve,HIGH);
+        digitalWrite(valve,LOW);
       }
        else{
-        digitalWrite(valve,LOW);
+        digitalWrite(valve,HIGH);
 
       }
+
+      // Serial.println(String(analogRead(robotPSI)*(5.0/1024.0)));
+      // Serial.println(analogRead(robotPSI));
+    roboPsi = analogRead(robotPSI); //reads value from input pin and assigns to variable
+    roboPsi = ((roboPsi-pressureZero)*pressuretransducermaxPSI)/(pressureMax-pressureZero);
+    if (roboPsi)  < targetPSI){
+      // Serial.println("Current Psi is lower than target");
+      // Serial.println(analogRead(robotPSI));
+      digitalWrite(compressor, LOW);
+      // Serial.println(analogRead(robotPSI));
+    } else {
+      digitalWrite (compressor, HIGH);
+    }
 
 //      If a type 2 command (sequence Command)
       }else if (dataIn.substring(0,1).toInt() == 2){
@@ -274,17 +352,11 @@ while (Serial.available() > 0){
     float voltage = voltValue * (5.0/1024.0);
 
     // Robot PSI
-    int psiValue = analogRead(robotPSI);
-    float psi = psiValue * (5.0/1024.0);
-
+    roboPsi = analogRead(robotPSI); //reads value from input pin and assigns to variable
+    roboPsi = ((roboPsi-pressureZero)*pressuretransducermaxPSI)/(pressureMax-pressureZero); //conversion equation to convert analog reading to psi
+   
     // Robot Tempature
-    int tempValue = analogRead(robotTemp);
-    float tempature = tempValue * (5.0/1024.0);
-
-
-    //  Serial.print ("Voltage lvl = ");
-    
-    // timer = millis();
+    roboTemp = sensors.getTempFByIndex(0); // Use a simple function to print out the data
   
     // Read normalized values
     Vector norm = mpu.readNormalizeGyro();
@@ -294,7 +366,7 @@ while (Serial.available() > 0){
     roll = roll + norm.XAxis * timeStep;
     yaw = yaw + norm.ZAxis * timeStep;
   
-    String sensorCode = String(voltage)+ ", " + String(pitch) + ", " + String(roll) + ", " + String(yaw) + ", " + String(psi) + ", " + String(tempature);
+    String sensorCode = String(voltage)+ ", " + String(pitch) + ", " + String(roll) + ", " + String(yaw) + ", " + String(roboPsi) + ", " + String(roboTemp);
     Serial.println(sensorCode);
     // Wait to full timeStep period
     //delay((timeStep*1000) - (millis() - timer));
