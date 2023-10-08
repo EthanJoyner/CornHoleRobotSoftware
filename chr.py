@@ -9,7 +9,7 @@ app.config['SECRET_KEY']= "bruh"
 socket = SocketIO(app)
 
 # Serial Setup
-ser = serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout=1)
+# ser = serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout=1)
 
 # Serial returning
 def returnSerial():
