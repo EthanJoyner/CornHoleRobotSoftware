@@ -13,7 +13,7 @@ void loop() {
     Serial.println(output);
     delay(1000);
   }
-  for(int i = 51; i >=0; i--){
+  for(int i = 50; i >=0; i--){
     int output = i*5;
     analogWrite(la,i);
     Serial.println(output);
