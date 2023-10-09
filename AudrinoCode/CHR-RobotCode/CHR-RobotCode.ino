@@ -272,7 +272,7 @@ while (Serial.available() > 0){
       // Serial.println(analogRead(robotPSI));
     roboPsi = analogRead(robotPSI); //reads value from input pin and assigns to variable
     roboPsi = ((roboPsi-pressureZero)*pressuretransducermaxPSI)/(pressureMax-pressureZero);
-    if (roboPsi)  < targetPSI){
+    if (roboPsi  < targetPSI){
       // Serial.println("Current Psi is lower than target");
       // Serial.println(analogRead(robotPSI));
       digitalWrite(compressor, LOW);
