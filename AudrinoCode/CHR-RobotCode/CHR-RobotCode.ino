@@ -58,6 +58,7 @@ void setup() {
 
   if(initMotorContollers()){
     ledPass(6);
+    piezoInspPass();
   } else {
     ledFail(6);
   }

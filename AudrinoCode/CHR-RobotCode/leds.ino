@@ -12,7 +12,7 @@ void initLeds(){
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.setPixelColor(3, pixels.Color(255, 255, 225));
   pixels.show();  
-  piezoInspPass();
+  piezoFire();
 }
 
 void ledPass(int idx){
