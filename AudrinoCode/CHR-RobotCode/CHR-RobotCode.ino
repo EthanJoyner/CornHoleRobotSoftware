@@ -69,105 +69,23 @@ void setup() {
 void loop() {
   // Start data take in
   while (Serial.available() > 0) {
-    // Read Bluetooth Status
-    if (Serial1.available() > 0) {
-      int btControlStatus = Serial1.readString().toInt();
-      if (btControlStatus == 1) {
-        // Serial.println("Admin is Ready to Fire!");
-        adminFireReady = 1;
-      } else {
-        // Serial.println("Signal Recived but not ready to fire");
-        adminFireReady = 0;
-      }
-    }
-
+    readBluetooth();
     String dataIn = Serial.readString();
-
     if (dataIn.substring(0, 1).toInt() == 1) {
-      signalType = dataIn.substring(0, 1).toInt();
-      analogLeft = dataIn.substring(1, 3).toInt();
-      analogRight = dataIn.substring(3, 5).toInt();
-      armUp = dataIn.substring(5, 6).toInt();
-      armDown = dataIn.substring(6, 7).toInt();
-      playerFireReady = dataIn.substring(7, 8).toInt();
-
-      if (dataIn.substring(8, 11) == "und") {
-        targetPSI = 0;
-      } else {
-        targetPSI = dataIn.substring(8, 11).toInt();
-      }
-
+      doTeleop(dataIn);
       motorFunction(analogLeft, analogRight);
       shouldFire(playerFireReady, adminFireReady);
-
-      //      If a type 2 command (sequence Command)
-    } else if (dataIn.substring(0, 1).toInt() == 2) {
-
-      //Do something with the data - like print it
-      Serial.print("Code: ");
-      Serial.println(dataIn);
-
-      signalType = dataIn.substring(0, 1).toInt();
-      moveType = dataIn.substring(1, 2).toInt();
-      moveTime = dataIn.substring(2, 6).toInt();
-
-
-      switch (moveType) {
-        // Move forward
-        case 1:
-          //            Serial.println("Move Forward");
-          break;
-
-        // Move backward
-        case 2:
-          //            Serial.println("Move Backwards");
-          break;
-
-        // Turn left
-        case 3:
-          //            Serial.println("Turn Left");
-          break;
-
-        // Turn right
-        case 4:
-          //            Serial.println("Turn Right");
-          break;
-
-        // Arm up
-        case 5:
-          //            Serial.println("Arm Up");
-          break;
-
-        // Arm down
-        case 6:
-          //            Serial.println("Arm Down");
-          break;
-
-          // Compress to
-        case 7:
-          //            Serial.println("compress to");
-          break;
-
-        // Default
-        default:
-          //            Serial.println("Invalid Movement Code");
-          break;
-      }
-
-
+    } else if (dataIn.substring(0, 1).toInt() == 2) {  // If a type 2 command (sequence Command)
+      doSeq(dataIn);
     } else {
       // Serial.println("No Signal...");
-      // Do something with the data - like print it
+      // Do somethinzg with the data - like print it
       // Serial.print("Code: ");
       // Serial.println(dataIn);
     }
 
     // Start data Send out
-
-
-    int voltage = 0;
-
-    String sensorCode = String(voltage) + ", " + String(getGryoPitch()) + ", " + String(getGryoRoll()) + ", " + String(getGryoYaw()) + ", " + String(getPsi()) + ", " + String(getTemp());
+    String sensorCode = String(getVolts()) + ", " + String(getGryoPitch()) + ", " + String(getGryoRoll()) + ", " + String(getGryoYaw()) + ", " + String(getPsi()) + ", " + String(getTemp());
     Serial.println(sensorCode);
     delay(50);
   }

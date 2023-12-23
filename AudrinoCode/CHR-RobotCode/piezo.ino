@@ -42,7 +42,6 @@ void piezoInspPass() {
 
 void piezoInspFail() {
   for (int i = 0; i < 3; i++)
-    ;
   {
     tone(piezo, T1);
     delay(500);
